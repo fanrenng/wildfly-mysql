@@ -1,18 +1,19 @@
 # WildFly 8 on Docker with Centos 7 and OpenJDK 1.7
-FROM jboss/wildfly:latest
+FROM jboss/wildfly:8.2.1.Final
 
 # Maintainer
-MAINTAINER Christian Metz <christian@metzweb.net>
+RUN java -version
+RUN cat /etc/os-release
 
 # Appserver
 ENV WILDFLY_USER admin
-ENV WILDFLY_PASS adminPassword
+ENV WILDFLY_PASS welcome1!
 
 # Database
 ENV DB_NAME sample
 ENV DB_USER mysql
 ENV DB_PASS mysql
-ENV DB_URI db:3306
+ENV DB_URI localhost:3306
 
 ENV MYSQL_VERSION 6.0.6
 ENV JBOSS_CLI /opt/jboss/wildfly/bin/jboss-cli.sh
@@ -38,7 +39,7 @@ RUN echo "=> Starting WildFly server" && \
     echo "=> Creating a new datasource" && \
       $JBOSS_CLI --connect --command="data-source add \
         --name=${DB_NAME}DS \
-        --jndi-name=java:/jdbc/datasources/${DB_NAME}DS \
+        --jndi-name=java:jboss/jdbc/datasources/${DB_NAME}DS \
         --user-name=${DB_USER} \
         --password=${DB_PASS} \
         --driver-name=mysql \
